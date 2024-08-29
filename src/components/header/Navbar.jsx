@@ -30,9 +30,9 @@ const nav = [
   return (
     <nav>
       <ul className="flex space-x-6 font-bold text-md">
-        {nav.map((item) => {
+        {nav.map((item,index) => {
           return (
-            <li key={item.index} className={`hover:text-yellow-400 duration-200 transition-colors ${item.active ? "text-yellow-400" : ""}`}>
+            <li key={index} className={`hover:text-yellow-400 duration-200 transition-colors ${item.active ? "text-yellow-400" : ""}`}>
               <Link to={item.path}>{item.name}</Link>
             </li>
           );
