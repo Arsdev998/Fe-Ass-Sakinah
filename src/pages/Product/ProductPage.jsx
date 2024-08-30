@@ -3,7 +3,7 @@ import React from "react";
 
 const ProductPage = () => {
   return (
-    <main>
+    <main className="min-h-screen flex flex-col  mx-auto w-full max-w-[1400px] ">
       <Product />
     </main>
   );

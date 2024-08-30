@@ -1,11 +1,12 @@
-import React from 'react'
+import DetailProduct from "@/components/product/DetailProduct";
 
-const ProductDetail = () => {
+const ProductDetailPage = () => {
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <main className="min-h-screen flex flex-col  mx-auto w-full max-w-[1400px] ">
+     
+        <DetailProduct />
+    </main>
+  );
+};
 
-export default ProductDetail
+export default ProductDetailPage;

@@ -1,5 +1,5 @@
+import { Button } from "@/components/ui/button";
 import React from "react";
-import { Button } from "../ui/button";
 
 const LeftHero = () => {
   return (
@@ -10,7 +10,7 @@ const LeftHero = () => {
         {""} Store
       </h1>
       <p className="text-lg font-semibold">
-        Mari berbelanja kebutuhan anda di Ass-Sakinah Store, dengan barang yang
+        Belanja lebih mudah dan murah,Mari berbelanja kebutuhan anda di Ass-Sakinah Store, dengan barang yang
         berkualitas dan terjamin halal
       </p>
       <Button className="max-w-[200px]">Belanja Sekarang</Button>

@@ -5,10 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "@/redux/api/authApi";
 import { toast } from "sonner";
+import { authReset } from "@/redux/slice/authSlice";
 
 const RightHeader = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { isAuth, isLogout ,authLoading} = useSelector((state) => state.auth);
 
   const handleLogout = () => {
@@ -19,6 +19,7 @@ const RightHeader = () => {
     if (isLogout) {
       toast.success("Berhasil logout")
        localStorage.removeItem("login")
+       dispatch(authReset())
     }
   }, [isLogout]);
 

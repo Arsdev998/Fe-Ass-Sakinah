@@ -1,5 +1,5 @@
 import LeftHero from "./LeftHero";
-import img from '@/assets/img/hero.png'
+import img from '@/assets/img/heroright.png'
 
 export default function Hero() {
   return (
