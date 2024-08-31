@@ -14,7 +14,7 @@ export const shipmentApi = createApi({
       query: (province_id) => `/api/ongkir/city/${province_id}`,
     }),
     getServices: builder.query({
-      query: (origin, destination, weight, courier) =>
+      query: ({origin, destination, weight, courier}) =>
         `/api/ongkir/cost/${origin}/${destination}/${weight}/${courier}`,
     }),
   }),

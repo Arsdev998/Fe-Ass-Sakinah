@@ -22,9 +22,9 @@ const Order = ({ product }) => {
       origin: origin,
       destination: city,
       weight: product?.weight,
-      courier: courier,
+      courier,
     },
-    { skip: !city || courier }
+    { skip: !courier }
   );
 
   const increase = () => {
@@ -68,6 +68,7 @@ const Order = ({ product }) => {
         cities={cities}
         provinsi={(p) => setProvince(p)}
         kota={(c) => setCity(c)}
+        kurir={(k) => setCourier(k)}
       />
     </div>
   );

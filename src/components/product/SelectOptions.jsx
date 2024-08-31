@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from "../ui/select";
 
-const SelectOptions = ({ provinces, cities, provinsi, kota }) => {
+const SelectOptions = ({ provinces, cities, provinsi, kota , kurir}) => {
   const handleProvince = (value) => {
     provinsi(value); // Call the function passed as prop with selected province value
   };
@@ -15,6 +15,10 @@ const SelectOptions = ({ provinces, cities, provinsi, kota }) => {
   const handleCity = (value) => {
     kota(value); // Call the function passed as prop with selected city value
   };
+  
+  const handleCourier = (value) =>{
+    kurir(value)
+  }
 
   return (
     <div className="flex flex-col gap-y-3">
@@ -46,7 +50,7 @@ const SelectOptions = ({ provinces, cities, provinsi, kota }) => {
         </SelectContent>
       </Select>
       {/* kurir select */}
-      <Select>
+      <Select onValueChange={handleCourier}>
         <SelectTrigger>
             <SelectValue placeholder="Pilih Expedisi" />
         </SelectTrigger>
