@@ -8,7 +8,7 @@ export const login = createAsyncThunk(
   async (userData, thunkApi) => {
     try {
       const { data } = await axiosInstance.post(
-        "/auth/login",
+        "/api/auth/login",
         userData,
         // config
       );
@@ -22,7 +22,7 @@ export const login = createAsyncThunk(
 
 export const loadUser = createAsyncThunk("auth/loadUser", async (_, thunkApi) => {
   try {
-    const {data}  = await axiosInstance.get("/user/profile");
+    const {data}  = await axiosInstance.get("/api/user/profile");
     return data
   } catch (error) {
     return thunkApi.rejectWithValue(error.response.data.message)
@@ -32,7 +32,7 @@ export const loadUser = createAsyncThunk("auth/loadUser", async (_, thunkApi) =>
 
 export const logoutUser = createAsyncThunk("auth/logout", async(_,thunkApi)=>{
   try {
-    const {data} = await axiosInstance.post("/auth/logout");
+    const {data} = await axiosInstance.post("/api/auth/logout");
     return data.data
   } catch (error) {
     return thunkApi.rejectWithValue(error.response.data.message);

@@ -6,9 +6,20 @@ export const shipmentApi = createApi({
     baseUrl: `${import.meta.env.VITE_BACKEND_URL}`,
     credentials: "include",
   }),
-  endpoints : (builder)=>{
+  endpoints: (builder) => ({
     getProvinces: builder.query({
-        query:() => "/provinces"
-    })
-  }
+      query: () => "/api/ongkir/provinces",
+    }),
+    getCities: builder.query({
+      query: (province_id) => `/api/ongkir/city/${province_id}`,
+    }),
+    getServices: builder.query({
+      query: (origin, destination, weight, courier) =>
+        `/api/ongkir/cost/${origin}/${destination}/${weight}/${courier}`,
+    }),
+  }),
 });
+
+export const { useGetProvincesQuery, useGetCitiesQuery, useGetServicesQuery } = shipmentApi;
+
+

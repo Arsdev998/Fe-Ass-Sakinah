@@ -1,10 +1,31 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
+import {
+  useGetCitiesQuery,
+  useGetProvincesQuery,
+  useGetServicesQuery,
+} from "@/redux/api/shippmentApi";
+import SelectOptions from "./SelectOptions";
 
 const Order = ({ product }) => {
   const [qty, setQty] = useState(1);
+  const [province, setProvince] = useState("");
+  const [city, setCity] = useState("");
+  const [courier, setCourier] = useState("");
   const [subtotal, setSubtotal] = useState(product?.price);
+  const origin = "395";
+  const { data: provinces, error } = useGetProvincesQuery();
+  const { data: cities } = useGetCitiesQuery(province, { skip: !province });
+  const { data: services } = useGetServicesQuery(
+    {
+      origin: origin,
+      destination: city,
+      weight: product?.weight,
+      courier: courier,
+    },
+    { skip: !city || courier }
+  );
 
   const increase = () => {
     if (qty < product.stock) {
@@ -19,6 +40,9 @@ const Order = ({ product }) => {
       setSubtotal(product?.price - (qty - 1));
     }
   };
+
+  console.log(services);
+  
 
   return (
     <div className="w-[400px] h-[400px] p-4 border rounded-md shadow-lg">
@@ -39,10 +63,12 @@ const Order = ({ product }) => {
         <p className="font-semibold">Subtotal:</p>
         <p className="font-semibold">Rp {subtotal.toLocaleString("id-ID")}</p>
       </div>
-      <div className="">
-        <h3 className="font-bold text-sm">Alamat Pengiriman</h3>
-        <select name="" id=""></select>
-      </div>
+      <SelectOptions
+        provinces={provinces}
+        cities={cities}
+        provinsi={(p) => setProvince(p)}
+        kota={(c) => setCity(c)}
+      />
     </div>
   );
 };
