@@ -9,7 +9,7 @@ const store = configureStore({
     auth: authSlice,
     [productApi.reducerPath]: productApi.reducer,
     [shipmentApi.reducerPath]: shipmentApi.reducer,
-    [paymentApi.reducerPath]:paymentApi
+    [paymentApi.reducerPath]:paymentApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([

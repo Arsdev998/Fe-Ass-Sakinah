@@ -18,9 +18,10 @@ const Order = ({ product }) => {
   const [courier, setCourier] = useState("");
   const [subtotal, setSubtotal] = useState("");
   const [ongkir, setOngkir] = useState("");
-  const [address, setAddress] = useState("")
+  const [address, setAddress] = useState("");
+  const { isAuth, user } = useSelector((state) => state.auth);
   const origin = "395";
-  const [getToken,{isLoading}] = useGetTokenMutation()
+  const [getToken, { isLoading ,data,status}] = useGetTokenMutation();
   const { data: provinces, error } = useGetProvincesQuery();
   const { data: cities } = useGetCitiesQuery(province, { skip: !province });
   const { data: servicesData } = useGetServicesQuery(
@@ -32,8 +33,6 @@ const Order = ({ product }) => {
     },
     { skip: !courier }
   );
-
-  const {isAuth} = useSelector((state) => state.auth)
 
   const service = servicesData && servicesData?.results[0].costs;
 
@@ -57,22 +56,42 @@ const Order = ({ product }) => {
     }
   }, [product]);
 
-  const cartHandler = () =>{
-     if(!isAuth){
-      toast.warning("Harap Login terlebih Dahulu")
-     }
-     if(!address){
-      toast.warning("Alamat Harus Diisi")
-     }
+  const cartHandler = () => {
+    if (!isAuth) {
+      toast.warning("Harap Login terlebih Dahulu");
+    }
+    if (!address) {
+      toast.warning("Alamat Harus Diisi");
+    }
+    const data = {
+      orderId: Date.now(),
+      amount: total,
+      name: user?.name,
+      email: user?.email,
+    };
+    getToken(data);
+  };
+  const buyHandler = () => {
+    if (!isAuth) {
+      toast.warning("Harap Login terlebih Dahulu");
+    }
+    if (!address) {
+      toast.warning("Alamat Harus Diisi");
+    }
+    const data = {
+      orderId: Date.now(),
+      amount: total,
+      name: user?.name,
+      email: user?.email,
+    };
+  };
+
+ useEffect(()=>{
+  if(status === "fulfilled"){
+    window.snap.pay
   }
-  const buyHandler = () =>{
-     if(!isAuth){
-      toast.warning("Harap Login terlebih Dahulu")
-     }
-      if (!address) {
-        toast.warning("Alamat Harus Diisi");
-      }
-  }
+},[])
+  
 
   return (
     <div className="w-[400px] p-4 border rounded-md shadow-lg">
@@ -101,7 +120,7 @@ const Order = ({ product }) => {
         kurir={(k) => setCourier(k)}
         layanan={(e) => setOngkir(e)}
         services={service}
-        alamat={(a)=> setAddress(a)}
+        alamat={(a) => setAddress(a)}
       />
       <div className="flex flex-col gap-1 p-2">
         <div className="flex justify-between font-semibold">
@@ -115,7 +134,9 @@ const Order = ({ product }) => {
           </p>
         </div>
         <Button onClick={cartHandler}>Masukan Keranjang</Button>
-        <Button variant="destructive">Beli</Button>
+        <Button variant="destructive" onClick={buyHandler} disabled={isLoading}>
+          {isLoading ? "Loading.." : "Beli"}
+        </Button>
       </div>
     </div>
   );
