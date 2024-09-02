@@ -15,15 +15,17 @@ const DetailProduct = () => {
         <p>loadinggg</p>
       ) : (
         <section className="flex p-4 justify-center gap-2">
-          <div className="w-[800px] gap-2 flex">
+          <div className="max-w-[800px] gap-4 flex">
             <img
               src={data?.images[0].link}
               alt={data?.name}
-              className="w-[350px] rounded-md"
+              className="w-[350px] h-[400px] object-cover rounded-md"
             />
-            <div className="py-2">
+            <div className="">
               <p className="font-bold text-lg">{data?.name}</p>
-              <p>{data?.weight}</p>
+              <p>
+                Berat: <span className="font-semibold">{data?.weight}</span>{" "}
+              </p>
               <p className="font-bold">
                 Rp {data?.price.toLocaleString("id-ID")}
               </p>

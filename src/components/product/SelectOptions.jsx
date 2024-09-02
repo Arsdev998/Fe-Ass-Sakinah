@@ -6,8 +6,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
 
-const SelectOptions = ({ provinces, cities, provinsi, kota , kurir}) => {
+const SelectOptions = ({
+  provinces,
+  cities,
+  provinsi,
+  kota,
+  kurir,
+  layanan,
+  services,
+  alamat
+}) => {
   const handleProvince = (value) => {
     provinsi(value); // Call the function passed as prop with selected province value
   };
@@ -15,9 +26,17 @@ const SelectOptions = ({ provinces, cities, provinsi, kota , kurir}) => {
   const handleCity = (value) => {
     kota(value); // Call the function passed as prop with selected city value
   };
-  
-  const handleCourier = (value) =>{
-    kurir(value)
+
+  const handleCourier = (value) => {
+    kurir(value);
+  };
+
+  const handleService = (value) =>{
+    layanan(value)
+  }
+
+  const handleAddress = (value) =>{
+    alamat(value)
   }
 
   return (
@@ -37,29 +56,58 @@ const SelectOptions = ({ provinces, cities, provinsi, kota , kurir}) => {
         </SelectContent>
       </Select>
       {/* city select */}
-      <Select onValueChange={handleCity}>
+      <Select onValueChange={handleCity} disabled={!cities}>
         <SelectTrigger>
           <SelectValue placeholder="Pilih Kota" />
         </SelectTrigger>
         <SelectContent>
-          {cities?.map((city) => (
-            <SelectItem key={city.city_id} value={city.city_id}>
-              {city.type} {city.city_name}
+          {cities?.length === 0 ? (
+            <SelectValue placeholder="Pilih Kota" />
+          ) : (
+            cities?.map((city) => (
+              <SelectItem key={city.city_id} value={city.city_id}>
+                {city.type} {city.city_name}
+              </SelectItem>
+            ))
+          )}
+        </SelectContent>
+      </Select>
+      {/* kurir select */}
+      <Select onValueChange={handleCourier} disabled={!cities}>
+        <SelectTrigger>
+          <SelectValue placeholder="Pilih Expedisi" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="jne">JNE</SelectItem>
+          <SelectItem value="pos">POS</SelectItem>
+          <SelectItem value="tiki">TIKI</SelectItem>
+        </SelectContent>
+      </Select>
+      {/* service select */}
+      <Select onValueChange={handleService} disabled={!cities}>
+        <SelectTrigger>
+          <SelectValue placeholder="Pilih Layanan" />
+        </SelectTrigger>
+        <SelectContent>
+          {services?.map((item) => (
+            <SelectItem
+              key={item.service}
+              value={item.cost[0].value}
+              className=""
+            >
+              {`
+                ${item.service} Rp.${item.cost[0].value.toLocaleString(
+                "id-ID"
+              )} Estimasi ${item.cost[0].etd} Hari
+              `}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
-      {/* kurir select */}
-      <Select onValueChange={handleCourier}>
-        <SelectTrigger>
-            <SelectValue placeholder="Pilih Expedisi" />
-        </SelectTrigger>
-        <SelectContent>
-            <SelectItem value="jne">JNE</SelectItem>
-            <SelectItem value="pos">POS</SelectItem>
-            <SelectItem value="tiki">TIKI</SelectItem>
-        </SelectContent>
-      </Select>
+      <div className="">
+        <Label htmlFor="address">Alamat</Label>
+        <Textarea onChange={handleAddress} placeholder="Jalan, blok, gang, komplek, desa, kecematan, " id="address"/>
+      </div>
     </div>
   );
 };
