@@ -10,6 +10,7 @@ import SelectOptions from "./SelectOptions";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { useGetTokenMutation } from "@/redux/api/paymentApi";
+import { useCreateOrderMutation } from "@/redux/api/orderApi";
 
 const Order = ({ product }) => {
   const [qty, setQty] = useState(1);
@@ -19,9 +20,11 @@ const Order = ({ product }) => {
   const [subtotal, setSubtotal] = useState("");
   const [ongkir, setOngkir] = useState("");
   const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
   const { isAuth, user } = useSelector((state) => state.auth);
   const origin = "395";
-  const [getToken, { isLoading ,data,status}] = useGetTokenMutation();
+  const [getToken, { isLoading, data, status }] = useGetTokenMutation();
+  const [createOrder,{isSuccess,reset}] = useCreateOrderMutation();
   const { data: provinces, error } = useGetProvincesQuery();
   const { data: cities } = useGetCitiesQuery(province, { skip: !province });
   const { data: servicesData } = useGetServicesQuery(
@@ -37,6 +40,7 @@ const Order = ({ product }) => {
   const service = servicesData && servicesData?.results[0].costs;
 
   const total = subtotal + ongkir;
+  const orderId = Date.now();
 
   const increase = () => {
     if (qty < product.stock) {
@@ -58,10 +62,10 @@ const Order = ({ product }) => {
 
   const cartHandler = () => {
     if (!isAuth) {
-      toast.warning("Harap Login terlebih Dahulu");
+      return toast.warning("Harap Login terlebih Dahulu");
     }
-    if (!address) {
-      toast.warning("Alamat Harus Diisi");
+    if (!address || !phone) {
+      return toast.warning("Alamat Harus Diisi");
     }
     const data = {
       orderId: Date.now(),
@@ -73,25 +77,93 @@ const Order = ({ product }) => {
   };
   const buyHandler = () => {
     if (!isAuth) {
-      toast.warning("Harap Login terlebih Dahulu");
+      return toast.warning("Harap Login terlebih Dahulu");
     }
-    if (!address) {
-      toast.warning("Alamat Harus Diisi");
+    if (!address || !phone) {
+      return toast.warning("Alamat Harus Diisi");
     }
     const data = {
-      orderId: Date.now(),
+      orderId: orderId,
       amount: total,
       name: user?.name,
       email: user?.email,
     };
   };
 
- useEffect(()=>{
-  if(status === "fulfilled"){
-    window.snap.pay
-  }
-},[])
-  
+  useEffect(() => {
+    if (status === "fulfilled") {
+      window.snap.pay(data?.token, {
+        onSuccess: (result) => {
+          const data = {
+            orderId: orderId,
+            user: user?._id,
+            address: address,
+            phone: phone,
+            subtotal: subtotal,
+            payment: total,
+            paymentStatus: result.transaction_status,
+            shippingCost: ongkir,
+            products: [
+              {
+                productId: product?._id,
+                qty: qty,
+                totalPrice: subtotal,
+                profit: product?.price * qty,
+              },
+            ],
+          };
+          createOrder(data)
+        },
+        onPending: (result) => {
+          const data = {
+            orderId: orderId,
+            user: user?._id,
+            address: address,
+            phone: phone,
+            subtotal: subtotal,
+            payment: total,
+            paymentStatus: result.transaction_status,
+            shippingCost: ongkir,
+            products: [
+              {
+                productId: product?._id,
+                qty: qty,
+                totalPrice: subtotal,
+                profit: product?.price * qty,
+              },
+            ],
+          };
+        },
+        onError: (error) => {
+          toast.error(`Terjadi error ${error}`);
+        },
+        onClose: () => {
+          toast.info("Pembayaran belum dilakukan, segera lakukan Pembayaran");
+        },
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const midtransScriptUrl = import.meta.env.VITE_MIDTRANS_SCRIPT_URL;
+    let scriptTag = document.createElement("script");
+    scriptTag.src = midtransScriptUrl;
+
+    const myMidtransClientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
+    scriptTag.setAttribute("data-client-key", myMidtransClientKey);
+
+    document.body.appendChild(scriptTag);
+
+    return () => {
+      document.body.removeChild(scriptTag);
+    };
+  }, []);
+
+  useEffect(()=>{
+   if(isSuccess){
+    reset()
+   }
+  },[isSuccess,reset])
 
   return (
     <div className="w-[400px] p-4 border rounded-md shadow-lg">
@@ -121,6 +193,7 @@ const Order = ({ product }) => {
         layanan={(e) => setOngkir(e)}
         services={service}
         alamat={(a) => setAddress(a)}
+        hp={(h) => setPhone(h)}
       />
       <div className="flex flex-col gap-1 p-2">
         <div className="flex justify-between font-semibold">

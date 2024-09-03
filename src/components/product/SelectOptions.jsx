@@ -8,6 +8,7 @@ import {
 } from "../ui/select";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import { Input } from "../ui/input";
 
 const SelectOptions = ({
   provinces,
@@ -17,7 +18,8 @@ const SelectOptions = ({
   kurir,
   layanan,
   services,
-  alamat
+  alamat,
+  hp
 }) => {
   const handleProvince = (value) => {
     provinsi(value); // Call the function passed as prop with selected province value
@@ -31,12 +33,16 @@ const SelectOptions = ({
     kurir(value);
   };
 
-  const handleService = (value) =>{
-    layanan(value)
-  }
+  const handleService = (value) => {
+    layanan(value);
+  };
 
-  const handleAddress = (value) =>{
-    alamat(value)
+  const handleAddress = (value) => {
+    alamat(value);
+  };
+
+  const handleHp = (value) => {
+    hp(value)
   }
 
   return (
@@ -105,8 +111,14 @@ const SelectOptions = ({
         </SelectContent>
       </Select>
       <div className="">
+        <Label htmlFor="phone">Whatsapp</Label>
+        <Input onChange={handleHp} type="number" id="phone" placeholder="Masukan nomor wa yang bisa dihubungi"/>
         <Label htmlFor="address">Alamat</Label>
-        <Textarea onChange={handleAddress} placeholder="Jalan, blok, gang, komplek, desa, kecematan, " id="address"/>
+        <Textarea
+          onChange={handleAddress}
+          placeholder="Jalan, blok, gang, komplek, desa, kecematan, "
+          id="address"
+        />
       </div>
     </div>
   );
