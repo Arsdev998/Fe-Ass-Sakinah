@@ -41,6 +41,7 @@ const Order = ({ product }) => {
 
   const total = subtotal + ongkir;
   const orderId = Date.now();
+  const token = data?.token
 
   const increase = () => {
     if (qty < product.stock) {
@@ -88,11 +89,12 @@ const Order = ({ product }) => {
       name: user?.name,
       email: user?.email,
     };
+    getToken(data)
   };
 
   useEffect(() => {
-    if (status === "fulfilled") {
-      window.snap.pay(data?.token, {
+    if (token) {
+      window.snap.pay(token, {
         onSuccess: (result) => {
           const data = {
             orderId: orderId,
@@ -142,7 +144,7 @@ const Order = ({ product }) => {
         },
       });
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     const midtransScriptUrl = import.meta.env.VITE_MIDTRANS_SCRIPT_URL;
@@ -164,6 +166,9 @@ const Order = ({ product }) => {
     reset()
    }
   },[isSuccess,reset])
+
+  console.log(token);
+  
 
   return (
     <div className="w-[400px] p-4 border rounded-md shadow-lg">
