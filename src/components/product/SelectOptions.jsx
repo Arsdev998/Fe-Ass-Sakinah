@@ -19,7 +19,7 @@ const SelectOptions = ({
   layanan,
   services,
   alamat,
-  hp
+  hp,
 }) => {
   const handleProvince = (value) => {
     provinsi(value); // Call the function passed as prop with selected province value
@@ -37,13 +37,13 @@ const SelectOptions = ({
     layanan(value);
   };
 
-  const handleAddress = (value) => {
-    alamat(value);
+  const handleAddress = (e) => {
+    alamat(e.target.value);
   };
 
-  const handleHp = (value) => {
-    hp(value)
-  }
+  const handleHp = (e) => {
+    hp(e.target.value);
+  };
 
   return (
     <div className="flex flex-col gap-y-3">
@@ -112,7 +112,12 @@ const SelectOptions = ({
       </Select>
       <div className="">
         <Label htmlFor="phone">Whatsapp</Label>
-        <Input onChange={handleHp} type="number" id="phone" placeholder="Masukan nomor wa yang bisa dihubungi"/>
+        <Input
+          onChange={handleHp}
+          type="number"
+          id="phone"
+          placeholder="Masukan nomor wa yang bisa dihubungi"
+        />
         <Label htmlFor="address">Alamat</Label>
         <Textarea
           onChange={handleAddress}

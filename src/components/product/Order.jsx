@@ -92,6 +92,27 @@ const Order = ({ product }) => {
     getToken(data)
   };
 
+  const createOrderData = (transactionStatus) => {
+  return {
+    orderId: orderId,
+    user: { ...user, _id: user?._id }, // Make a shallow copy to avoid circular reference
+    address: address,
+    phone: phone,
+    subtotal: subtotal,
+    payment: total,
+    paymentStatus: transactionStatus,
+    shippingCost: ongkir,
+    products: [
+      {
+        productId: product?._id,
+        qty: qty,
+        totalPrice: subtotal,
+        profit: product?.price * qty,
+      },
+    ],
+  };
+};
+
   useEffect(() => {
     if (token) {
       window.snap.pay(token, {
@@ -110,7 +131,7 @@ const Order = ({ product }) => {
                 productId: product?._id,
                 qty: qty,
                 totalPrice: subtotal,
-                profit: product?.price * qty,
+                profit: product?.profit * qty,
               },
             ],
           };
@@ -131,10 +152,11 @@ const Order = ({ product }) => {
                 productId: product?._id,
                 qty: qty,
                 totalPrice: subtotal,
-                profit: product?.price * qty,
+                profit: product?.profit * qty,
               },
             ],
           };
+          createOrderData(data)
         },
         onError: (error) => {
           toast.error(`Terjadi error ${error}`);
@@ -167,8 +189,6 @@ const Order = ({ product }) => {
    }
   },[isSuccess,reset])
 
-  console.log(token);
-  
 
   return (
     <div className="w-[400px] p-4 border rounded-md shadow-lg">
@@ -197,8 +217,8 @@ const Order = ({ product }) => {
         kurir={(k) => setCourier(k)}
         layanan={(e) => setOngkir(e)}
         services={service}
-        alamat={(a) => setAddress(a)}
-        hp={(h) => setPhone(h)}
+        alamat={setAddress}
+        hp={setPhone}
       />
       <div className="flex flex-col gap-1 p-2">
         <div className="flex justify-between font-semibold">

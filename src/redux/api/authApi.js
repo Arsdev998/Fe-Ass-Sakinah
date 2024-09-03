@@ -12,7 +12,6 @@ export const login = createAsyncThunk(
         userData,
         // config
       );
-      console.log("tess");
       return data
     } catch (error) {
       return thunkApi.rejectWithValue(error.response.data.message);
