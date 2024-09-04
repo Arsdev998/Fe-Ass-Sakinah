@@ -135,7 +135,7 @@ const Order = ({ product }) => {
               },
             ],
           };
-          createOrder(data)
+          createOrder(data);
         },
         onPending: (result) => {
           const data = {
