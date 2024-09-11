@@ -17,9 +17,11 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { error,authLoading, isAuth } = useSelector((state) => state.auth);
+  const { error, authLoading, isAuth, message } = useSelector(
+    (state) => state.auth
+  );
   const form = useForm({
     defaultValues: {
       username: "",
@@ -34,13 +36,17 @@ const LoginPage = () => {
     console.log(values);
   };
 
-  useEffect(()=>{
-    if(isAuth){
-      navigate("/")
-      localStorage.setItem("login",JSON.stringify("login"))
+  useEffect(() => {
+    if (isAuth) {
+      navigate("/");
+      localStorage.setItem("login", JSON.stringify("login"));
     }
-  },[isAuth])
-  
+  }, [isAuth]);
+
+  console.log(authLoading);
+
+  console.log(message);
+
   return (
     <section className="flex items-center justify-center w-full h-screen">
       <div className="flex flex-col pt-5 items-center w-[500px] h-[500px] border bg-slate-400">
@@ -78,7 +84,10 @@ const LoginPage = () => {
                 )}
               />
             </div>
-            <Button disabled={authLoading} type="submit">Login</Button>
+            {message && <p className="text-red-500">{message}</p>}
+            <Button disabled={authLoading} type="submit">
+              Login
+            </Button>
             <div className="">
               <p>
                 Belum memiliki akun? <Link to={"/register"}>daftar</Link>

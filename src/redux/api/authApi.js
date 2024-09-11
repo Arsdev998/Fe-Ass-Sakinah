@@ -1,11 +1,10 @@
 import { axiosInstance } from "@/lib/axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { redirect } from "react-router-dom";
 
 
 export const login = createAsyncThunk(
   "auth/login",
-  async (userData, thunkApi) => {
+  async (userData, {rejectWithValue}) => {
     try {
       const { data } = await axiosInstance.post(
         "/api/auth/login",
@@ -14,7 +13,8 @@ export const login = createAsyncThunk(
       );
       return data
     } catch (error) {
-      return thunkApi.rejectWithValue(error.response.data.message);
+      console.log(error);
+      return rejectWithValue(error.response.data.error);
     }
   }
 );

@@ -92,33 +92,14 @@ const Order = ({ product }) => {
     getToken(data)
   };
 
-  const createOrderData = (transactionStatus) => {
-  return {
-    orderId: orderId,
-    user: { ...user, _id: user?._id }, // Make a shallow copy to avoid circular reference
-    address: address,
-    phone: phone,
-    subtotal: subtotal,
-    payment: total,
-    paymentStatus: transactionStatus,
-    shippingCost: ongkir,
-    products: [
-      {
-        productId: product?._id,
-        qty: qty,
-        totalPrice: subtotal,
-        profit: product?.price * qty,
-      },
-    ],
-  };
-};
+  
 
   useEffect(() => {
     if (token) {
       window.snap.pay(token, {
         onSuccess: (result) => {
           const data = {
-            orderId: orderId,
+            orderId: result.order_id,
             user: user?._id,
             address: address,
             phone: phone,
@@ -135,11 +116,13 @@ const Order = ({ product }) => {
               },
             ],
           };
+          console.log(result);
+          
           createOrder(data);
         },
         onPending: (result) => {
           const data = {
-            orderId: orderId,
+            orderId: result.order_id,
             user: user?._id,
             address: address,
             phone: phone,
@@ -156,7 +139,8 @@ const Order = ({ product }) => {
               },
             ],
           };
-          createOrderData(data)
+          console.log("pending condition");
+          createOrder(data)
         },
         onError: (error) => {
           toast.error(`Terjadi error ${error}`);

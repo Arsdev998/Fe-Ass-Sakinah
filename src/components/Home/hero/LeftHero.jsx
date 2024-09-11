@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const LeftHero = () => {
   return (
@@ -10,10 +11,12 @@ const LeftHero = () => {
         {""} Store
       </h1>
       <p className="text-lg font-semibold">
-        Belanja lebih mudah dan murah,Mari berbelanja kebutuhan anda di Ass-Sakinah Store, dengan barang yang
-        berkualitas dan terjamin halal
+        Belanja lebih mudah dan murah,Mari berbelanja kebutuhan anda di
+        Ass-Sakinah Store, dengan barang yang berkualitas dan terjamin halal
       </p>
-      <Button className="max-w-[200px]">Belanja Sekarang</Button>
+      <Link to={'/product'}>
+        <Button className="max-w-[200px]">Belanja Sekarang</Button>
+      </Link>
     </div>
   );
 };

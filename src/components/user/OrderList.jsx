@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -10,6 +10,9 @@ import {
 import { FaCommentDots } from "react-icons/fa";
 import { MdCloudSync } from "react-icons/md";
 import { Button } from "../ui/button";
+import { useUpdateStatusMutation } from "@/redux/api/paymentApi";
+import { useGetMyOrderMutation } from "@/redux/api/orderApi";
+import { toast } from "sonner";
 
 const header = [
   {
@@ -42,6 +45,19 @@ const header = [
 ];
 
 const OrderList = ({ orderUser }) => {
+  const [updateStatus,{isSuccess,error,isLoading,data}] = useUpdateStatusMutation();
+  const [getMyOrder] = useGetMyOrderMutation()
+
+  const updateHandler = (id) => {
+    updateStatus(id)
+  }
+
+  useEffect(()=>{
+   if(isSuccess){
+    getMyOrder()
+    toast.success(data.message)
+   }
+  },[isSuccess,error])
   return (
     <>
       <Table className="border border-black">
@@ -71,8 +87,12 @@ const OrderList = ({ orderUser }) => {
                   Rp {order.payment.toLocaleString("id-ID")}
                 </TableCell>
                 <TableCell className="space-x-1">
-                  <Button variant="ghost" size="icon">
-                    <MdCloudSync />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => updateHandler(order.orderId)}
+                  >
+                    {isLoading ?  "...." : <MdCloudSync />}
                   </Button>
                   <Button variant="ghost" size="icon">
                     <FaCommentDots />
